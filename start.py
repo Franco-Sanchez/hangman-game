@@ -7,7 +7,7 @@ def start_game(word_random, word_to_guess):
     print(word_random)
     print('¡Adivina la palabra!')
     print(' '.join(word_to_guess))
-    character = input("Ingresa una letra: ").upper()
+    character = validate_input("Ingresa una letra: ")
 
     for index, letter in enumerate(word_random):
       if letter == character:
@@ -17,6 +17,7 @@ def start_game(word_random, word_to_guess):
 
   print(f"¡Ganaste! La palabra correcta era {word_random}")
 
+
 def fill_data():
   convert = str.maketrans('áéíóú', 'aeiou')
 
@@ -24,8 +25,22 @@ def fill_data():
     return [line.translate(convert).upper().rstrip("\n") for line in f]
 
 
-def validate_input():
-  pass
+def validate_input(message):
+  while True:
+    try:
+      character = input(message).upper()
+
+      if len(character) == 0:
+        raise ValueError("Tiene que ingresar una letra")
+      elif len(character) > 1:
+        raise ValueError("Debe ingresar solo una letra")
+      elif character.isnumeric(): 
+        raise ValueError("Debe ser una letra, no un número")
+      
+      return character
+
+    except ValueError as ve:
+      print(ve)
 
 
 def run():
