@@ -25,7 +25,7 @@ def validate_input(message):
 
     except ValueError as ve:
       print(ve)
-      
+
 
 def start_game(word_random, word_to_guess):
   attempts = 5
@@ -34,28 +34,33 @@ def start_game(word_random, word_to_guess):
   print(f"You have {attempts} attempts. For every hit you win one more attempt.")
 
   while '-' in word_to_guess:
+    print(word_random)
     print(' '.join(word_to_guess))
     character = validate_input("Enter a letter: ")
 
     right_guess = False
 
-    for index, letter in enumerate(word_random):
-      if letter == character:
-        word_to_guess[index] = character
-        right_guess = True
-    
+    if character not in word_to_guess:
+      for index, letter in enumerate(word_random):
+        if letter == character: 
+          word_to_guess[index] = character
+          right_guess = True
+
     attempts = attempts + 1 if right_guess else attempts - 1
     
-    if attempts == 0:
+    if attempts == 0 and '-' in word_to_guess:
       system("cls || clear")
-      return print(f"Sorry! The word right was {word_random}.")
-
-    system("cls || clear")
-    print("Guess the word!")
-    print(f"You have {attempts} {pluralize('attempt') if attempts > 1 else 'attempt'} left.")
+      print(f"Sorry! The word right was {word_random}.")
+      print("\n")
+      return
+    elif '-' in word_to_guess:
+      system("cls || clear")
+      print("Guess the word!")
+      print(f"You have {attempts} {pluralize('attempt') if attempts > 1 else 'attempt'} left.")
 
   system("cls || clear")
-  print(f"Won! The word was {word_random}")
+  print(f"Won! The word was {word_random}.")
+  print("\n")
 
 
 def run():
