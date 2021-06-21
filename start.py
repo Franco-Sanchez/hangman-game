@@ -1,41 +1,27 @@
 from random import choice
 
-DATA = []
-
-def start_game(word_random, word_spaces):
+def start_game(word_random, word_to_guess):
   bad_attempts = 0
 
-  while '-' in word_spaces:
+  while '-' in word_to_guess:
+    print(word_random)
     print('¡Adivina la palabra!')
-    word_spaces = list(read_data())
-    print(' '.join(word_spaces))
-    word_input = input("Ingresa una letra: ").upper()
+    print(' '.join(word_to_guess))
+    character = input("Ingresa una letra: ").upper()
 
     for index, letter in enumerate(word_random):
-      if letter == word_input:
-        word_spaces[index] = word_input
+      if letter == character:
+        word_to_guess[index] = character
       else:
         bad_attempts += 1
 
-    write_data(''.join(word_spaces))
-
+  print(f"¡Ganaste! La palabra correcta era {word_random}")
 
 def fill_data():
+  convert = str.maketrans('áéíóú', 'aeiou')
+
   with open("./files/data.txt", "r", encoding="utf-8") as f:
-
-    for line in f:
-      DATA.append(line.upper().rstrip("\n")) # agrega el elemento a la lista y borra los saltos de línea
-
-
-def write_data(word):
-  with open('./files/word.txt', 'w', encoding="utf-8") as f:
-    f.write(word)
-
-
-def read_data():
-  with open('./files/word.txt', "r", encoding="utf-8") as f:
-    for line in f:
-      return line
+    return [line.translate(convert).upper().rstrip("\n") for line in f]
 
 
 def validate_input():
@@ -43,12 +29,10 @@ def validate_input():
 
 
 def run():
-  fill_data()
-  convert = str.maketrans('ÁÉÍÓÚ', 'AEIOU')
-  word_random = (choice(DATA)).translate(convert)
-  word_spaces = ('-' * len(word_random))
-  write_data(word_spaces)
-  start_game(word_random, word_spaces)
+  data = fill_data()
+  word_random = choice(data)
+  word_to_guess = list(('-' * len(word_random)))
+  start_game(word_random, word_to_guess)
 
 
 if __name__ == "__main__":
